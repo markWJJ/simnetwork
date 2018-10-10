@@ -36,13 +36,13 @@ class ESIM(ModelTemplate):
             word_emb = tf.nn.embedding_lookup(self.emb_mat, self.sent1_token)
             if self.config.with_char:
                 char_emb = self.build_char_embedding(self.sent1_char, self.sent1_char_len, self.char_mat,
-                        is_training=is_training, reuse=reuse)
+                        is_training=self.is_training, reuse=reuse)
                 word_emb = tf.concat([word_emb, char_emb], axis=-1)
         elif index == "passage":
             word_emb = tf.nn.embedding_lookup(self.emb_mat, self.sent2_token)
             if self.config.with_char:
                 char_emb = self.build_char_embedding(self.sent2_char, self.sent2_char_len, self.char_mat,
-                        is_training=is_training, reuse=reuse)
+                        is_training=self.is_training, reuse=reuse)
                 word_emb = tf.concat([word_emb, char_emb], axis=-1)
         return word_emb
         

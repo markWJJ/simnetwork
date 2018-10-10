@@ -12,7 +12,7 @@ class ModelTemplate(object):
 
         session_conf = tf.ConfigProto(
           allow_soft_placement=True,
-          log_device_placement=True,
+          log_device_placement=False,
           gpu_options=gpu_options)
         self.sess = tf.Session(config=session_conf,
                                 graph=self.graph)

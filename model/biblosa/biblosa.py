@@ -13,10 +13,10 @@ class BiBLOSA(ModelTemplate):
         reuse = kargs["reuse"]
         if self.config.char_embedding == "lstm":
             char_emb = char_embedding_utils.lstm_char_embedding(char_token, char_lengths, char_embedding, 
-                            self.config, is_training, reuse)
+                            self.config, self.is_training, reuse)
         elif self.config.char_embedding == "conv":
             char_emb = char_embedding_utils.conv_char_embedding(char_token, char_lengths, char_embedding, 
-                            self.config, is_training, reuse)
+                            self.config, self.is_training, reuse)
         return char_emb
 
     def build_emebdding(self, index, *args, **kargs):
@@ -30,14 +30,14 @@ class BiBLOSA(ModelTemplate):
             word_emb = tf.nn.embedding_lookup(self.emb_mat, self.sent1_token)
             if self.config.with_char:
                 char_emb = self.build_char_embedding(self.sent1_char, self.sent1_char_len, self.char_mat,
-                        is_training=is_training, reuse=reuse)
+                        is_training=self.is_training, reuse=reuse)
                 word_emb = tf.concat([word_emb, char_emb], axis=-1)
 
         elif index == "passage":
             word_emb = tf.nn.embedding_lookup(self.emb_mat, self.sent2_token)
             if self.config.with_char:
                 char_emb = self.build_char_embedding(self.sent2_char, self.sent2_char_len, self.char_mat,
-                        is_training=is_training, reuse=reuse)
+                        is_training=self.is_training, reuse=reuse)
                 word_emb = tf.concat([word_emb, char_emb], axis=-1)
         return word_emb
 

@@ -13,27 +13,30 @@ def generate_embedding_mat(dict_size, emb_len, init_mat=None, extra_symbol=None,
     :param scope:
     :return: if extra_mat is None, return[dict_size+extra_dict_size,emb_len], else [dict_size,emb_len]
     """
-    with tf.variable_scope(scope or 'gene_emb_mat'):
-        if init_mat is None:
-            emb_mat = tf.Variable(tf.random_uniform([dict_size, emb_len], -1.0, 1.0),
-                                name="emb_mat",
-                                dtype=tf.float32)
-        else:
-            emb_len = init_mat.shape[1]
-            extra_symbol_matrix = np.random.uniform(-0.01, 0.01, (len(extra_symbol), emb_len))
-            
-            emb_mat_ept_and_unk = tf.get_variable("emb_pad_unk", 
-                                   [len(extra_symbol), emb_len],  
-                                   tf.float32, 
-                                   initializer=tf.constant_initializer(extra_symbol_matrix, dtype=tf.float32),
-                                   trainable=True)
-            
-            emb_mat_other = tf.get_variable("emb_mat", 
-                                  [dict_size - len(extra_symbol), emb_len], 
-                                  tf.float32,
-                                  initializer=tf.constant_initializer(init_mat[len(extra_symbol):], 
-                                                          dtype=tf.float32),
-                                  trainable=False)
-            
-            emb_mat = tf.concat([emb_mat_ept_and_unk, emb_mat_other], 0)
-        return emb_mat
+    # with tf.variable_scope(scope or 'gene_emb_mat'):
+    #     if init_mat is None:
+    #         emb_mat = tf.Variable(tf.random_uniform([dict_size, emb_len], -1.0, 1.0),
+    #                             name="emb_mat",
+    #                             dtype=tf.float32)
+    #     else:
+    #         emb_len = init_mat.shape[1]
+    #         extra_symbol_matrix = np.random.uniform(-0.01, 0.01, (len(extra_symbol), emb_len))
+    #
+    #         emb_mat_ept_and_unk = tf.get_variable("emb_pad_unk",
+    #                                [len(extra_symbol), emb_len],
+    #                                tf.float32,
+    #                                initializer=tf.constant_initializer(extra_symbol_matrix, dtype=tf.float32),
+    #                                trainable=True)
+    #
+    #         emb_mat_other = tf.get_variable("emb_mat",
+    #                               [dict_size - len(extra_symbol), emb_len],
+    #                               tf.float32,
+    #                               initializer=tf.constant_initializer(init_mat[len(extra_symbol):],
+    #                                                       dtype=tf.float32),
+    #                               trainable=False)
+    #
+    #         emb_mat = tf.concat([emb_mat_ept_and_unk, emb_mat_other], 0)
+    #     return emb_mat
+    with tf.variable_scope(name_or_scope=scope):
+        emb_mat=tf.Variable(tf.random_normal(shape=(dict_size,emb_len),dtype=tf.float32),trainable=True)
+    return emb_mat

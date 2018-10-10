@@ -14,10 +14,10 @@ class BiMPM(ModelTemplate):
         reuse = kargs["reuse"]
         if self.config.char_embedding == "lstm":
             char_emb = char_embedding_utils.lstm_char_embedding(char_token, char_lengths, char_embedding, 
-                            self.config, is_training, reuse)
+                            self.config, self.is_training, reuse)
         elif self.config.char_embedding == "conv":
             char_emb = char_embedding_utils.conv_char_embedding(char_token, char_lengths, char_embedding, 
-                            self.config, is_training, reuse)
+                            self.config, self.is_training, reuse)
         return char_emb
 
     def build_emebdding(self, index, *args, **kargs):

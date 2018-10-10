@@ -71,7 +71,7 @@ class Eval(object):
 
         FLAGS.token_emb_mat = self.embedding_mat
         FLAGS.char_emb_mat = 0
-        FLAGS.vocab_size = self.embedding_mat.shape[0]
+        FLAGS.vocab_size = len(self.token2id)
         FLAGS.char_vocab_size = 0
         FLAGS.emb_size = self.embedding_mat.shape[1]
         FLAGS.extra_symbol = self.extral_symbol
@@ -122,9 +122,9 @@ class Eval(object):
 
 if __name__ == "__main__":
     config = {}
-    config["model_config"] = "/notebooks/source/simnet/model_config.json"
-    config["model_config_path"] = "/notebooks/source/simnet/configs"
-    config["vocab_path"] = "/data/xuht/duplicate_sentence/LCQMC/emb_mat.pkl"
+    config["model_config"] = "../model_config.json"
+    config["model_config_path"] = "..//configs"
+    config["vocab_path"] = "../input_data/vocab.pkl"
 
     model_config_lst = {}
     # model_config_lst["biblosa"] = {
@@ -141,14 +141,10 @@ if __name__ == "__main__":
 
     model_config_lst["bimpm"] = {
         "model_name":"bimpm",
-        "model_str":"bimpm_1535308428_0.07933253372508178_0.8712499981576746",
-        "model_dir":"/data/xuht/test/simnet/bimpm/models"
+        "model_str":"bimpm_1_1_1",
+        "model_dir":"../bin/save_model/bimpm/models"
     }
-    model_config_lst["esim"] = {
-        "model_name":"esim",
-        "model_str":"esim_1535168381_0.05196159574817019_0.8515909083864905",
-        "model_dir":"/data/xuht/test/simnet/esim/models"
-    }
+    #
     eval_api = Eval(config)
     eval_api.init(model_config_lst)
 

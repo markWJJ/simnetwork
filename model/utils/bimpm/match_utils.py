@@ -147,8 +147,8 @@ def match_passage_with_question(passage_reps, question_reps, passage_mask, quest
         #             scope_name="fw_attention", att_type=options.att_type, att_dim=options.att_dim,
         #             remove_diagnoal=False, mask1=passage_mask, mask2=question_mask, is_training=is_training, dropout_rate=dropout_rate)
 
-        all_question_aware_representatins.append(tf.reduce_max(relevancy_matrix, axis=2,keep_dims=True))
-        all_question_aware_representatins.append(tf.reduce_mean(relevancy_matrix, axis=2,keep_dims=True))
+        all_question_aware_representatins.append(tf.reduce_max(relevancy_matrix, axis=2,keepdims=True))
+        all_question_aware_representatins.append(tf.reduce_mean(relevancy_matrix, axis=2,keepdims=True))
         dim += 2
         if with_full_match:
             if forward:

@@ -39,6 +39,7 @@ def prepare_data(data_path, w2v_path, vocab_path, make_vocab=True):
                     cut_tool, 
                     data_clearner_api,
                     "tab")
+    print(anchor)
 
     if make_vocab:
         dic = data_utils.make_dic(anchor+check)
@@ -49,7 +50,6 @@ def prepare_data(data_path, w2v_path, vocab_path, make_vocab=True):
     else:
         embedding_info = pkl.load(open(os.path.join(vocab_path), "rb"), 
                                 encoding="iso-8859-1")
-
     return [anchor, check, label, anchor_len, check_len, embedding_info]
 
 def train(config):
@@ -94,8 +94,8 @@ def train(config):
     train_check_len, 
     embedding_info] = prepare_data(train_path, 
                         w2v_path, vocab_path,
-                        make_vocab=True)
-
+                        make_vocab=False)
+    print(train_anchor)
     [dev_anchor, 
     dev_check, 
     dev_label, 
@@ -112,7 +112,8 @@ def train(config):
 
     FLAGS.token_emb_mat = embedding_mat
     FLAGS.char_emb_mat = 0
-    FLAGS.vocab_size = embedding_mat.shape[0]
+    FLAGS.vocab_size = len(token2id)
+    logger.info('vocab_size:%s'%FLAGS.vocab_size)
     FLAGS.char_vocab_size = 0
     FLAGS.emb_size = embedding_mat.shape[1]
     FLAGS.extra_symbol = extral_symbol
@@ -196,8 +197,12 @@ def train(config):
         logger.info("epoch\t{}\tdev\tloss\t{}\taccuracy\t{}".format(epoch, dev_loss, dev_accuracy))
 
         if dev_accuracy > best_dev_accuracy or dev_loss < best_dev_loss:
-            timestamp = str(int(time.time()))
-            model.save_model(os.path.join(model_dir, model_name, "models"), model_name+"_{}_{}_{}".format(timestamp, dev_loss, dev_accuracy))
+            # timestamp = str(int(time.time()))
+            timestamp=111
+            # model.save_model(os.path.join(model_dir, model_name, "models"), model_name+"_{}_{}_{}".format(timestamp, dev_loss, dev_accuracy))
+            model.save_model(os.path.join(model_dir, model_name, "models"), model_name+"_{}_{}_{}".format(1, 1, 1))
+
+            logger.info('save model finish')
             best_dev_accuracy = dev_accuracy
             best_dev_loss = dev_loss
 
@@ -220,25 +225,30 @@ if __name__ == "__main__":
     parser.add_argument('--vocab_path', type=str, help='vocab_path')
 
     args, unparsed = parser.parse_known_args()
-    model_config = args.model_config
+    model_config = '../model_config.json'
 
     with open(model_config, "r") as frobj:
         model_config = json.load(frobj)
 
     config = {}
-    config["model_dir"] = args.model_dir
-    config["model"] = args.model
-    config["model_config_path"] = os.path.join(args.config_prefix, 
-                            model_config.get(args.model, model_config["biblosa"]))
-    config["gpu_id"] = args.gpu_id
-    config["train_path"] = args.train_path
+    config["model_dir"] = './save_model'
+    config["model"] = 'bimpm'
+    config_prefix='../configs'
+    config["model_config_path"] = os.path.join(config_prefix,
+                            model_config.get('bimpm', model_config["bimpm"]))
+    config["gpu_id"] = '2'
+    config["train_path"] = '../input_data/WikiQA-train-small.txt'
     config["w2v_path"] = args.w2v_path
-    config["vocab_path"] = args.vocab_path
-    config["dev_path"] = args.dev_path
-    
+    config["vocab_path"] = '../input_data/vocab.pkl'
+    config["dev_path"] = '../input_data/WikiQA-dev.txt'
+
+    # print(config)
     train(config)
 
+    # print(config)
 
+    # data=json.load(open('..\model_config.json','rb'))
+    # print(data)
     
 
 

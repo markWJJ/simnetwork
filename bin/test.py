@@ -93,7 +93,7 @@ def test(config):
 
     FLAGS.token_emb_mat = embedding_mat
     FLAGS.char_emb_mat = 0
-    FLAGS.vocab_size = embedding_mat.shape[0]
+    FLAGS.vocab_size = len(token2id)
     FLAGS.char_vocab_size = 0
     FLAGS.emb_size = embedding_mat.shape[1]
     FLAGS.extra_symbol = extral_symbol
@@ -156,21 +156,25 @@ if __name__ == "__main__":
     parser.add_argument('--model_str', type=str, help='vocab_path')
 
     args, unparsed = parser.parse_known_args()
-    model_config = args.model_config
+    model_config = '../model_config.json'
 
     with open(model_config, "r") as frobj:
         model_config = json.load(frobj)
 
     config = {}
-    config["model_dir"] = args.model_dir
-    config["model"] = args.model
-    config["model_config_path"] = os.path.join(args.config_prefix, 
-                            model_config.get(args.model, "biblosa"))
-    config["gpu_id"] = args.gpu_id
-    config["test_path"] = args.test_path
+    config["model_dir"] = './save_model'
+    config["model"] = 'bimpm'
+    config_prefix = '../configs'
+    config["model_config_path"] = os.path.join(config_prefix,
+                                               model_config.get('bimpm', model_config["bimpm"]))
+    config["gpu_id"] = '2'
+    config["train_path"] = '../input_data/WikiQA-train-small.txt'
     config["w2v_path"] = args.w2v_path
-    config["vocab_path"] = args.vocab_path
-    config["model_str"] = args.model_str
+    config["vocab_path"] = '../input_data/vocab.pkl'
+    config["dev_path"] = '../input_data/WikiQA-train-small.txt'
+    config["test_path"] = '../input_data/WikiQA-dev.txt'
+
+    config["model_str"] = 'bimpm_1_1_1'
     
     test(config)
 
